@@ -14,7 +14,7 @@
 Make sure you have **Go** installed and run:
 
 ```sh
-go build -o pings pings.go
+go build -o pings main.go
 ```
 
 This will create an executable `pings` (or `pings.exe` on Windows).
@@ -59,8 +59,8 @@ pings [file] [interval]
 - On Windows, ANSI color codes may not work in `cmd.exe`. Use **PowerShell** or **Windows Terminal**.
 - Requires Go to compile. Precompiled binaries can be created for Linux, Windows, and macOS using:
   ```sh
-  GOOS=linux GOARCH=amd64 go build -o pings-linux pings.go
-  GOOS=windows GOARCH=amd64 go build -o pings.exe pings.go
-  GOOS=darwin GOARCH=amd64 go build -o pings-mac pings.go
+  GOOS=linux GOARCH=amd64 go build -o pings-linux main.go
+  GOOS=windows GOARCH=amd64 go build -o pings.exe main.go
+  GOOS=darwin GOARCH=amd64 go build -o pings-mac main.go
   ```
 
