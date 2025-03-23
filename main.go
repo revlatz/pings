@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"bytes"
 )
 
 // clearConsole löscht den Konsoleninhalt
@@ -24,12 +25,33 @@ func clearConsole() {
 // pingHost führt einen Ping zu einer IP aus und gibt true zurück, wenn sie online ist
 func pingHost(ip string) bool {
 	var cmd *exec.Cmd
+
 	if runtime.GOOS == "windows" {
 		cmd = exec.Command("ping", "-n", "1", "-w", "1000", ip)
 	} else {
 		cmd = exec.Command("ping", "-c", "1", "-W", "1", ip)
 	}
-	return cmd.Run() == nil
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+
+	err := cmd.Run()
+	if err != nil {
+		return false
+	}
+
+	output := out.String()
+
+	if runtime.GOOS == "windows" {
+		return strings.Contains(output, "Antwort von") &&
+			!strings.Contains(output, "nicht erreichbar") &&
+			!strings.Contains(output, "Zeitüberschreitung") &&
+			!strings.Contains(output, "unreachable")
+	} else {
+		return strings.Contains(output, "1 received") ||
+			strings.Contains(output, "1 packets received")
+	}
 }
 
 // loadIPsFromFile lädt die IP-Adressen aus einer Datei
